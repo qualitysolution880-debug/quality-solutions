@@ -1,171 +1,109 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { redirect } from "next/navigation"
-import { prisma } from "@/lib/prisma"
 import Link from "next/link"
 
-async function getDashboardData() {
-  const [articlesCount, productsCount, usersCount] = await Promise.all([
-    prisma.article.count(),
-    prisma.product.count(),
-    prisma.user.count(),
-  ])
-
-  return {
-    articlesCount,
-    productsCount,
-    usersCount,
-  }
-}
-
-export default async function DashboardPage() {
-  const session = await getServerSession(authOptions)
-
-  if (!session) {
-    redirect("/auth/login")
-  }
-
-  const data = await getDashboardData()
-
+export default function HomePage() {
   return (
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <header className="mb-8">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-white">لوحة التحكم</h1>
-              <p className="text-gray-400 mt-1">
-                مرحباً {session.user?.name} ({session.user?.email})
-              </p>
-            </div>
-            <div className="text-sm bg-gray-800 px-3 py-1 rounded-full">
-              <span className="text-gray-400">الدور: </span>
-              <span className="text-[#5eead4] font-medium">{session.user?.role}</span>
-            </div>
+        <header className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-[#5eead4] via-[#60a5fa] to-[#c084fc] bg-clip-text text-transparent">
+              Quality Solutions
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-300 mb-8">
+            المنصة المتكاملة لعلوم المياه والتقنيات المتقدمة
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/auth/login"
+              className="btn-primary px-8 py-3 text-center"
+            >
+              تسجيل الدخول
+            </Link>
+            <Link
+              href="/dashboard"
+              className="px-8 py-3 border border-gray-600 rounded-lg hover:bg-gray-800 transition-colors text-center"
+            >
+              لوحة التحكم
+            </Link>
           </div>
         </header>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold text-white mb-1">{data.articlesCount}</div>
-                <div className="text-gray-400">مقالة</div>
-              </div>
-              <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <span className="text-2xl">📄</span>
-              </div>
-            </div>
+        {/* Hero Section */}
+        <div className="card mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-[#5eead4]">
+            مرحباً بك في منصة المياه الرائدة
+          </h2>
+          <p className="text-gray-300 mb-6">
+            هنا تجد كل ما تحتاجه من معارف علمية، أدوات تقنية، ومنتجات متخصصة في مجال معالجة المياه.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
             <Link
               href="/articles"
-              className="inline-block mt-4 text-[#60a5fa] hover:underline text-sm"
+              className="btn-primary text-center"
             >
-              إدارة المقالات →
+              استكشاف المقالات
             </Link>
-          </div>
-
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold text-white mb-1">{data.productsCount}</div>
-                <div className="text-gray-400">منتج</div>
-              </div>
-              <div className="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                <span className="text-2xl">🛒</span>
-              </div>
-            </div>
             <Link
               href="/products"
-              className="inline-block mt-4 text-[#c084fc] hover:underline text-sm"
+              className="px-6 py-3 border border-gray-600 rounded-lg hover:bg-gray-800 transition-colors text-center"
             >
-              إدارة المنتجات →
-            </Link>
-          </div>
-
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold text-white mb-1">{data.usersCount}</div>
-                <div className="text-gray-400">مستخدم</div>
-              </div>
-              <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
-                <span className="text-2xl">👥</span>
-              </div>
-            </div>
-            <Link
-              href="/users"
-              className="inline-block mt-4 text-[#10b981] hover:underline text-sm"
-            >
-              إدارة المستخدمين →
+              زيارة المتجر
             </Link>
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="card text-center">
+            <div className="text-3xl font-bold text-[#5eead4] mb-2">100+</div>
+            <div className="text-gray-400">مقال علمي</div>
+          </div>
+          <div className="card text-center">
+            <div className="text-3xl font-bold text-[#60a5fa] mb-2">50+</div>
+            <div className="text-gray-400">منتج تقني</div>
+          </div>
+          <div className="card text-center">
+            <div className="text-3xl font-bold text-[#c084fc] mb-2">24/7</div>
+            <div className="text-gray-400">دعم متخصص</div>
+          </div>
+        </div>
+
+        {/* Quick Links */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="card">
-            <h3 className="text-lg font-bold mb-4 text-white">إجراءات سريعة</h3>
-            <div className="space-y-3">
-              <Link
-                href="/articles/new"
-                className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                <span>✏️ كتابة مقال جديد</span>
-                <span className="text-gray-400">→</span>
-              </Link>
-              <Link
-                href="/products/new"
-                className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                <span>📦 إضافة منتج جديد</span>
-                <span className="text-gray-400">→</span>
-              </Link>
-              <Link
-                href="/settings"
-                className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                <span>⚙️ الإعدادات</span>
-                <span className="text-gray-400">→</span>
-              </Link>
-            </div>
+            <h3 className="text-xl font-bold mb-3 text-[#60a5fa]">المقالات العلمية</h3>
+            <p className="text-gray-400 mb-4">
+              اكتشف مكتبتنا الشاملة من المقالات العلمية المحكمة
+            </p>
+            <Link href="/articles" className="text-[#5eead4] hover:underline">
+              تصفح المقالات →
+            </Link>
           </div>
-
+          
           <div className="card">
-            <h3 className="text-lg font-bold mb-4 text-white">نشاط حديث</h3>
-            <div className="space-y-3">
-              <div className="p-3 bg-gray-800/30 rounded-lg">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-sm text-gray-300">تم إنشاء مقال جديد</p>
-                    <p className="text-xs text-gray-500 mt-1">منذ ساعة</p>
-                  </div>
-                  <span className="text-[#60a5fa] text-sm">📄</span>
-                </div>
-              </div>
-              <div className="p-3 bg-gray-800/30 rounded-lg">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-sm text-gray-300">تم تسجيل مستخدم جديد</p>
-                    <p className="text-xs text-gray-500 mt-1">منذ 3 ساعات</p>
-                  </div>
-                  <span className="text-[#10b981] text-sm">👤</span>
-                </div>
-              </div>
-            </div>
+            <h3 className="text-xl font-bold mb-3 text-[#c084fc]">المتجر التقني</h3>
+            <p className="text-gray-400 mb-4">
+              منتجات ومواد معالجة المياه بجودة عالية
+            </p>
+            <Link href="/products" className="text-[#5eead4] hover:underline">
+              زيارة المتجر →
+            </Link>
           </div>
         </div>
 
-        {/* Back to Home */}
-        <div className="text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-          >
-            ← العودة إلى الصفحة الرئيسية
-          </Link>
-        </div>
+        {/* Footer */}
+        <footer className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-500">
+          <p>© 2024 Quality Solutions. جميع الحقوق محفوظة.</p>
+          <div className="mt-4 flex justify-center gap-6 text-sm">
+            <Link href="/about" className="hover:text-gray-300">من نحن</Link>
+            <Link href="/contact" className="hover:text-gray-300">اتصل بنا</Link>
+            <Link href="/privacy" className="hover:text-gray-300">الخصوصية</Link>
+            <Link href="/terms" className="hover:text-gray-300">الشروط</Link>
+          </div>
+        </footer>
       </div>
     </div>
   )
