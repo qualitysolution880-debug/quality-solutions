@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    optimizePackageImports: ['@radix-ui/react-icons']
+    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react']
   },
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -14,6 +14,16 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'api.dicebear.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.googleusercontent.com',
         pathname: '/**',
       },
     ],
