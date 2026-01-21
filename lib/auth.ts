@@ -1,6 +1,7 @@
 import { NextAuthOptions } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
+import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 
@@ -10,12 +11,14 @@ const loginSchema = z.object({
 })
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
   },
   pages: {
     signIn: "/auth/login",
+    error: "/auth/error",
   },
   providers: [
     CredentialsProvider({
@@ -26,6 +29,10 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("الرجاء إدخال البريد الإلكتروني وكلمة المرور")
+          }
+
           const validatedData = loginSchema.parse(credentials)
           
           const user = await prisma.user.findUnique({
@@ -53,7 +60,10 @@ export const authOptions: NextAuthOptions = {
             image: user.image
           }
         } catch (error) {
-          throw error
+          if (error instanceof Error) {
+            throw new Error(error.message)
+          }
+          throw new Error("حدث خطأ غير متوقع")
         }
       }
     })
