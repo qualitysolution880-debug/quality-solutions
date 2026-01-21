@@ -1,0 +1,24 @@
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "npm run build",
+    "installCommand": "npm install"
+  },
+  "deploy": {
+    "startCommand": "npm start",
+    "healthcheckPath": "/api/health",
+    "restartPolicyType": "ON_FAILURE"
+  },
+  "variables": {
+    "NODE_ENV": "production",
+    "NEXTAUTH_URL": "https://quality-solutions.up.railway.app",
+    "NEXTAUTH_SECRET": {
+      "description": "Secret for NextAuth.js (minimum 32 characters)",
+      "generator": "secret"
+    },
+    "DATABASE_URL": {
+      "description": "PostgreSQL connection string for the database",
+      "required": true
+    }
+  }
+}
